@@ -19,6 +19,7 @@ public class IPFS {
     public List<String> ObjectTemplates = Arrays.asList("unixfs-dir");
     public List<String> ObjectPatchTypes = Arrays.asList("add-link", "rm-link", "set-data", "append-data");
 
+    public String protocol = "http";
     public final String host;
     public final int port;
     private final String version;
@@ -42,6 +43,11 @@ public class IPFS {
 
     public IPFS(String host, int port) {
         this(host, port, "/api/v0/");
+    }
+
+    public IPFS(String protocol, String host, int port) {
+        this(host, port);
+        this.protocol = protocol;
     }
 
     public IPFS(String multiaddr) {
@@ -629,7 +635,7 @@ public class IPFS {
     }
 
     private byte[] retrieve(String path) throws IOException {
-        URL target = new URL("http", host, port, version + path);
+        URL target = new URL(protocol, host, port, version + path);
         return IPFS.get(target);
     }
 
@@ -676,7 +682,7 @@ public class IPFS {
     }
 
     private InputStream retrieveStream(String path) throws IOException {
-        URL target = new URL("http", host, port, version + path);
+        URL target = new URL(protocol, host, port, version + path);
         return IPFS.getStream(target);
     }
 
@@ -688,7 +694,7 @@ public class IPFS {
     }
 
     private Map postMap(String path, byte[] body, Map<String, String> headers) throws IOException {
-        URL target = new URL("http", host, port, version + path);
+        URL target = new URL(protocol, host, port, version + path);
         return (Map) JSONParser.parse(new String(post(target, body, headers)));
     }
 
